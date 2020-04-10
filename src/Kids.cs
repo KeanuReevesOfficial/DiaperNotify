@@ -13,20 +13,20 @@ namespace DiaperNotify
         public int numberOfKids;
         public int NumberOfKids => numberOfKids;
 
-        public int ageInMonths;
-        public int AgeInMonths => ageInMonths;
+        public int diaperSize;
+        public int DiaperSize => diaperSize;
 
-        public int averageDiaperUse;
-        public int AverageDiaperuse => averageDiaperUse;
+        //pampers specified average diapers per day based on size starting at newborn
+        public static readonly int[] AVG_DIAPERS_PER_DAY = { 8, 7, 6, 5, 5, 4, 4 };
 
         public void GatherKidsInformation()
         {
-
+            //TRY BLOCK
             Write("\nPlease enter the number of children in your household: ");
             numberOfKids = Int32.Parse(ReadLine());
 
             String[] kidsNames = new string[numberOfKids];
-            int[] agesInMonths = new int[numberOfKids];
+            int[] diaperSizes = new int[numberOfKids];
 
             //Gathering children(s) name and corresponding age.
             if (numberOfKids == 1)
@@ -34,8 +34,28 @@ namespace DiaperNotify
                 Write("\nWhat is your child's name?: ");
                 kidsName = ReadLine();
 
-                Write("\nHow old is {0} in months?", kidsName);
-                ageInMonths = Int32.Parse(ReadLine());
+                //THIS NEEDS TO BE REWORKED TO COME BACK AFTER EXCEPTION IS THROWN
+                try
+                {
+                    Write("\nWhat size diaper is {0} wearing? enter 0 for newborn: ", kidsName);
+                    diaperSize = Int32.Parse(ReadLine());
+
+                    while (true)
+
+                        if (diaperSize <= 6)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Write("Please enter a diaper size 0 - 6 : ");
+                            diaperSize = Int32.Parse(ReadLine());
+                        }
+                }
+                catch (FormatException e)
+                {
+                    WriteLine("Please enter a valid diaper size.", e);
+                }
             }
             else
             {
@@ -44,21 +64,42 @@ namespace DiaperNotify
                     Write("Please enter a childs name: ");
                     kidsNames[i] = ReadLine();
 
-                    Write("How old is {0} in months?: ", kidsNames[i]);
-                    agesInMonths[i] = Int32.Parse(ReadLine());
-                    }
-                }
+                    //THIS NEEDS TO BE REWORKED TO COME BACK AFTER EXCEPTION IS THROWN
+                    try
+                    {
+                        Write("What size diaper is {0} wearing? enter 0 for newborn: ", kidsNames[i]);
+                        diaperSizes[i] = Int32.Parse(ReadLine());
+                        while (true)
 
-        WriteLine("Here is what we have about the children so far");
+                            if (diaperSize <= 6)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Write("Please enter a diaper size 0 - 6 : ");
+                                diaperSize = Int32.Parse(ReadLine());
+                            }
+                    }
+                    catch (FormatException e)
+                    {
+                        WriteLine("Please enter a valid diaper size.", e);
+                    }
+
+                }
+            }
+
+            //verifying children information
+            WriteLine("Here is what we have about the children so far");
             if (numberOfKids == 1)
             {
-                WriteLine("{0} : {1} months old.", kidsName, ageInMonths);
+                WriteLine("{0} is wearing a {1} size diaper.", kidsName, diaperSize);
             }
             else
             {
                 for (int i = 0; i < kidsNames.Length; i++)
                 {
-                    WriteLine("{0} : {1} months old.", kidsNames[i], agesInMonths[i]);
+                    WriteLine("{0} is wearing a {1} size diaper", kidsNames[i], diaperSizes[i]);
                 }
             }
             while (true)
@@ -84,6 +125,9 @@ namespace DiaperNotify
                 }
             }
 
+            //WE WILL RUN PARRALLEL ARRAY WITH THE SIZE AND THE AVG USE.
+            WriteLine("How is {0}'s daily diaper usage?");
+            WriteLine("Below Average: ");
 
         }
     }
